@@ -1,44 +1,57 @@
 class Account:
-    def __init__(self, id, Name, Surname, balance):
+    def __init__(self, id, name, balance = 0):
         self.id = id
-        self.Name = Name
-        self.Surname = Surname
-        self.balance = balance
+        self.name = name
+        if balance >= 0:
+            self.balance = balance
 
     def __str__(self):
-        return "Account[" + "ID: " + str(self.id) + ", " + \
-               "Name: " + self.Name + ", " + "Surname: " + self.Surname + \
-               ", " + "Balance: " + str(self.balance) + "]"
+        return "Account[" + \
+               "id=" + str(self.id) + "," + \
+               "name=" +self.name + "," + \
+               "balance=" + str(self.balance) + \
+               "]"
 
-    def getID(self):
+    def getId(self):
         return self.id
 
     def getName(self):
-        return self.Name
-
-    def getSurname(self):
-        return self.Surname
+        return self.name
 
     def getBalance(self):
         return self.balance
 
-    def getFullname(self):
-        return self.Name + " " + self.Surname
+    def credit(self, amount):
+        if amount >= 0:
+            self.balance += amount
 
-    def getCredit(self, amount):
-        self.amount = amount
-        if self.amount <= self.balance:
-            self.balance = self.balance - self.amount
-        else:
-            print("amount exceeded")
         return self.balance
 
-halim = Account(123, 'Halim', 'Nezihoglu', 100)
-print(halim)
+    def debit(self, amount):
+        if self.balance - amount >= 0:
+            self.balance = self.balance - amount
+        else:
+            print("amount exceeded")
 
-print(halim.getID())
-print(halim.getFullname())
-print(halim.getBalance())
-print(halim.getCredit(20))
+        return self.balance
 
-print(halim)
+    def transferTo(self, another, amount):
+        if self.balance >= amount:
+            self.balance -= amount
+            another.credit(amount)
+        else:
+            print("amount exceeded")
+
+        return self.balance
+
+hesap1 = Account(1, 'Halim')
+hesap2 = Account(2, "Nurlan", 1000)
+
+print("Yeni balance")
+print(hesap1.credit(500))
+print(("Kestikten sonraki balance"))
+print(hesap1.debit(300))
+print("Transfer islemden sonra kalan miktar")
+print(hesap1.transferTo(hesap2, 100))
+print("Transfer islemden sonra kalan miktar")
+print(hesap2.transferTo(hesap1, 300))
